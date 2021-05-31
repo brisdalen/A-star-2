@@ -7,6 +7,13 @@ import org.junit.jupiter.api.Assertions.*
 internal class AStarHandlerTest {
 
     var handler = AStarHandler()
+    var tilesInput = arrayOf(
+        arrayOf("O", "O", "O", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O"),
+        arrayOf("O", "O", "O", "O", "O")
+    )
 
     lateinit var startNode: Node
     lateinit var goalNode: Node
@@ -20,7 +27,8 @@ internal class AStarHandlerTest {
     @Test
     fun getPathFromToEmpty() {
         val expectedSize = 0
+        val tiles = TerrainUtils.charInputToNodeMap(tilesInput)
 
-        assertEquals(expectedSize, handler.getPathFromTo(startNode, startNode).size)
+        assertEquals(expectedSize, handler.getPathFromTo(startNode, startNode, tiles).size)
     }
 }
