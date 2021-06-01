@@ -1,10 +1,35 @@
 import kotlin.math.abs
 
 class CostHandler {
+    fun manhattenDistance(start: Node, goal: Node): Int {
+        return abs(start.x - goal.y) + abs(start.y - goal.y)
+    }
 
-    companion object {
-        fun manhattenDistance(start: Node, goal: Node): Int {
-            return abs(start.x - goal.y) + abs(start.y - goal.y)
+    fun calculateG(originVariation: Variation, direction: Direction, goalVariation: Variation): Int {
+        println("calculateG provided with: ${originVariation.name}:${direction.name}:${goalVariation.name}")
+        return when(direction) {
+            Direction.NORTHWEST -> {
+                handleNorthWest(originVariation, goalVariation)
+            }
+            Direction.NORTH -> {
+                handleNorth(originVariation, goalVariation)
+            }
+            Direction.NORTHEAST -> {
+                handleNorthEast(originVariation, goalVariation)
+            }
+            Direction.WEST -> {
+                handleWest(originVariation, goalVariation)
+            }
+            Direction.EAST -> {
+                handleEast(originVariation, goalVariation)
+            }
+            Direction.SOUTHWEST -> {
+                handleSouthWest(originVariation, goalVariation)
+            }
+            Direction.SOUTH -> {
+                handleSouth(originVariation, goalVariation)
+            }
+            else -> handleSouthEast(originVariation, goalVariation)
         }
     }
 

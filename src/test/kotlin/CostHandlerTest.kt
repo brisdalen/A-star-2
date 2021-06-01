@@ -41,8 +41,8 @@ internal class CostHandlerTest {
         var n3 = Node(-5, -5)
 
         val expected = 10
-        assertEquals(expected, CostHandler.manhattenDistance(n1, n2))
-        assertEquals(expected, CostHandler.manhattenDistance(n1, n3))
+        assertEquals(expected, handler.manhattenDistance(n1, n2))
+        assertEquals(expected, handler.manhattenDistance(n1, n3))
     }
 
     @Test

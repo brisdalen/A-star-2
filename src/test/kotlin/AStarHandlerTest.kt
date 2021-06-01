@@ -8,7 +8,7 @@ internal class AStarHandlerTest {
 
     var handler = AStarHandler()
     var tilesInput = arrayOf(
-        arrayOf("O", "O", "O", "O", "O"),
+        arrayOf("E", "O", "O", "O", "O"),
         arrayOf("O", "O", "E", "O", "O"),
         arrayOf("O", "O", "E", "O", "O"),
         arrayOf("O", "O", "E", "O", "O"),
@@ -21,7 +21,7 @@ internal class AStarHandlerTest {
     @BeforeEach
     fun setUp() {
         startNode = Node(0, 0)
-        goalNode = Node(5, 0)
+        goalNode = Node(4, 0)
     }
 
     @Test
@@ -29,6 +29,14 @@ internal class AStarHandlerTest {
         val expectedSize = 0
         val tiles = TerrainUtils.charInputToNodeMap(tilesInput)
 
-        assertEquals(expectedSize, handler.getPathFromTo(startNode, startNode, tiles).size)
+        assertEquals(expectedSize, handler.getPathFromTo(tiles[startNode.y][startNode.x], tiles[startNode.y][startNode.x], tiles).size)
+    }
+
+    @Test
+    fun getPathFromStartToEnd() {
+        val expectedSize = 5;
+        val tiles = TerrainUtils.charInputToNodeMap(tilesInput)
+
+        assertEquals(expectedSize, handler.getPathFromTo(tiles[startNode.y][startNode.x], tiles[goalNode.y][goalNode.x], tiles).size)
     }
 }
