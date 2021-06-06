@@ -6,7 +6,6 @@ class CostHandler {
     }
 
     fun calculateG(originVariation: Variation, direction: Direction, goalVariation: Variation): Int {
-        println("calculateG provided with: ${originVariation.name}:${direction.name}:${goalVariation.name}")
         return when(direction) {
             Direction.NORTHWEST -> {
                 handleNorthWest(originVariation, goalVariation)
