@@ -18,6 +18,42 @@ class AStarHandler {
         Point(1, 1)
     )
 
+    /*
+    while (openSet.Count > 0) {
+			Node node = openSet[0];
+			for (int i = 1; i < openSet.Count; i ++) {
+				if (openSet[i].fCost < node.fCost || openSet[i].fCost == node.fCost) {
+					if (openSet[i].hCost < node.hCost)
+						node = openSet[i];
+				}
+			}
+
+			openSet.Remove(node); X
+			closedSet.Add(node); X
+
+			if (node == targetNode) { X
+				RetracePath(startNode,targetNode);
+				return;
+			}
+
+			foreach (Node neighbour in grid.GetNeighbours(node)) {
+				if (!neighbour.walkable || closedSet.Contains(neighbour)) {
+					continue;
+				}
+
+				int newCostToNeighbour = node.gCost + GetDistance(node, neighbour);
+				if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour)) {
+					neighbour.gCost = newCostToNeighbour;
+					neighbour.hCost = GetDistance(neighbour, targetNode);
+					neighbour.parent = node;
+
+					if (!openSet.Contains(neighbour))
+						openSet.Add(neighbour);
+				}
+			}
+		}
+     */
+
     // Clear and return the empty list if you're already at the target position
     fun getPathFromTo(start: Node, goal: Node, tiles: Array<Array<Node>>): List<Node> {
         path.clear()
@@ -27,25 +63,25 @@ class AStarHandler {
         println("Starting board: ")
         displayDebug(tiles)
 
-        val openSet = PriorityQueue(NodeComparator()) // 1 Initialize the open list
-        val closedSet = HashSet<Node>() // 2 Initialize the closed list
+        val openSet = PriorityQueue(NodeComparator())
+        val closedSet = HashSet<Node>()
 
         for(n in checkSurrounding(start, tiles, closedSet)) {
             println("Cost: ${gCostHandler.calculateG(start.variation, direction(start.position, n.position), n.variation)}")
         }
 
-        // put the starting node on the open list (you can leave its f at zero)
         openSet.add(start)
         var iters = 0
 
-        // 3. while the open list is not empty
-        // a) find the node with the least f on the open list, call it "q"
         while(openSet.isNotEmpty()) {
             println("Iterations: ${++iters}")
-            // b) pop q off the open list
             var q = openSet.poll()
+            closedSet.add(q)
 
-            // c) generate q's 8 successors and set their parents to q
+            if(q.position == goal.position) {
+                return retracePath(start, q)
+            }
+
             val surrounding = mutableListOf<Node>()
             for(n in checkSurrounding(q, tiles, closedSet)) {
                 val node = Node(n.x, n.y, q)
@@ -55,29 +91,14 @@ class AStarHandler {
                 surrounding.add(node)
             }
 
-            // d) for each successor
-            //     i) if successor is the goal, stop search
-            //     successor.g = q.g + distance between successor and q
-            //     successor.h = distance from goal to successor
-            //     successor.f = successor.g + successor.h
             for(successor in surrounding) {
-                if(successor.position == goal.position) {
-                    successor.g = q.g + gCostHandler.calculateG(q.variation, direction(q.position, successor.position), successor.variation)
-                    successor.h = gCostHandler.manhattenDistance(successor, goal)
-                    println("[${successor.x},${successor.y}]F:${successor.getF()}")
-                    return path
-                }
 
-                //ii) if a node with the same position as successor is in the OPEN list which has a
-                // lower f than successor, skip this successor
                 for(node in openSet) {
                     if(node.position == successor.position && node.getF() < successor.getF()) {
                         continue
                     }
                 }
 
-                // iii) if a node with the same position as successor is in the CLOSED list which has
-                // a lower f than successor, skip this successor otherwise, add the node to the open list
                 for(node in closedSet) {
                     if(node.position == successor.position && node.getF() < successor.getF()) {
                         continue
@@ -86,9 +107,6 @@ class AStarHandler {
                     }
                 }
             }
-
-            // e) push q on the closed list
-            closedSet.add(q)
         }
 
         return path
@@ -124,6 +142,19 @@ class AStarHandler {
             }
         }
         return validSurrounding
+    }
+
+    fun retracePath(start: Node, end: Node): List<Node> {
+        val path = mutableListOf<Node>()
+        var currentNode = end
+
+        while(currentNode != start) {
+            path.add(currentNode)
+            currentNode = currentNode.parent!!
+        }
+        path.reverse()
+
+        return path
     }
 
     private fun isValid(check: Point, input: Array<Array<Node>>): Boolean {
