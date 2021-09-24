@@ -63,6 +63,8 @@ class AStarHandler {
         println("Starting board: ")
         displayDebug(tiles)
 
+        // TODO: Create test for PriorityQueue that uses NodeComparator
+        // TODO: Create unit tests for every step of the algorithm, then things should work all together
         val openSet = PriorityQueue(NodeComparator())
         val closedSet = HashSet<Node>()
 
