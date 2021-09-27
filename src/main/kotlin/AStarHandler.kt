@@ -55,6 +55,28 @@ class AStarHandler {
 		}
      */
 
+    /*
+    OPEN = priority queue containing START
+CLOSED = empty set
+while lowest rank in OPEN is not the GOAL:
+  current = remove lowest rank item from OPEN
+  add current to CLOSED
+  for neighbors of current:
+    cost = g(current) + movementcost(current, neighbor)
+    if neighbor in OPEN and cost less than g(neighbor):
+      remove neighbor from OPEN, because new path is better
+    if neighbor in CLOSED and cost less than g(neighbor): ⁽²⁾
+      remove neighbor from CLOSED
+    if neighbor not in OPEN and neighbor not in CLOSED:
+      set g(neighbor) to cost
+      add neighbor to OPEN
+      set priority queue rank to g(neighbor) + h(neighbor)
+      set neighbor's parent to current
+
+reconstruct reverse path from goal to start
+by following parent pointers
+     */
+
     fun getPathFromTo(start: Node, goal: Node, tiles: Array<Array<Node>>): List<Node> {
         path.clear()
         // Clear and return the empty list if you're already at the target position
@@ -65,8 +87,8 @@ class AStarHandler {
         displayDebug(tiles)
 
         // TODO: Create unit tests for every step of the algorithm, then things should work all together
-        val openSet = PriorityQueue(NodeComparator())
-        val closedSet = HashSet<Node>()
+        val openSet = PriorityQueue(NodeComparator()) // OPEN = priority queue containing START
+        val closedSet = HashSet<Node>() // CLOSED = empty set
 
         for(n in checkSurrounding(start, tiles, closedSet)) {
             println("Cost: ${gCostHandler.calculateG(start.variation, direction(start.position, n.position), n.variation)}")
@@ -80,19 +102,19 @@ class AStarHandler {
             if(iters > 2000) {
                 throw Exception("Infinite loop in progress... Aborting")
             }
-            var q = openSet.poll()
-            closedSet.add(q)
+            var q = openSet.poll() // current = remove lowest rank item from OPEN
+            closedSet.add(q) // add current to CLOSED
 
             if(q.position == goal.position) {
                 return retracePath(start, q)
             }
-
+            // while lowest rank in OPEN is not the GOAL:
             val surrounding = mutableListOf<Node>()
-            for(n in checkSurrounding(q, tiles, closedSet)) {
+            for(n in checkSurrounding(q, tiles, closedSet)) { // for neighbors of current:
                 val node = Node(n.x, n.y, q)
                 node.g = node.parent!!.g + gCostHandler.calculateG(q.variation, direction(q.position, node.position), node.variation)
                 node.h = gCostHandler.manhattenDistance(node, goal)
-                node.setF(node.g + node.h)
+                node.setF(node.g + node.h) // cost = g(current) + movementcost(current, neighbor)
                 surrounding.add(node)
             }
 
@@ -114,7 +136,7 @@ class AStarHandler {
             }
         }
 
-        return path
+        return path // reconstruct reverse path from goal to start by following parent pointers
     }
 
     fun add(p1: Point, p2: Point): Point {
