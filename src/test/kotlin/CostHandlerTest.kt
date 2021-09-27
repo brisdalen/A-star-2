@@ -4,41 +4,25 @@ import org.junit.jupiter.api.Test
 
 internal class CostHandlerTest {
 
-    lateinit var handler: CostHandler
-    lateinit var open: Variation
-    lateinit var north: Variation
-    lateinit var leftNorth: Variation
-    lateinit var east: Variation
-    lateinit var upperEast: Variation
-    lateinit var downEast: Variation
-    lateinit var south: Variation
-    lateinit var rightSouth: Variation
-    lateinit var west: Variation
-    lateinit var downWest: Variation
-    lateinit var upperWest: Variation
-
-    @BeforeEach
-    fun setUp() {
-        open = Variation.O
-        north = Variation.N
-        leftNorth = Variation.ln
-        east = Variation.E
-        upperEast = Variation.de
-        downEast = Variation.de
-        south = Variation.S
-        rightSouth = Variation.rs
-        west = Variation.W
-        upperWest = Variation.uw
-        downWest = Variation.dw
-        handler = CostHandler()
-    }
+    private val handler = CostHandler()
+    private val open = Variation.O
+    private val north = Variation.N
+    private val leftNorth = Variation.ln
+    private val east = Variation.E
+    private val upperEast = Variation.de
+    private val downEast = Variation.de
+    private val south = Variation.S
+    private val rightSouth = Variation.rs
+    private val west = Variation.W
+    private val upperWest = Variation.uw
+    private val downWest = Variation.dw
 
     @Test
     fun testManhattenDistance() {
 
-        var n1 = Node(0, 0)
-        var n2 = Node(5, 5)
-        var n3 = Node(-5, -5)
+        val n1 = Node(0, 0)
+        val n2 = Node(5, 5)
+        val n3 = Node(-5, -5)
 
         val expected = 10
         assertEquals(expected, handler.manhattenDistance(n1, n2))
