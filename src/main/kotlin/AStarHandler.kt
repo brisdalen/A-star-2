@@ -1,4 +1,5 @@
 import java.awt.Point
+import java.lang.Exception
 import java.util.*
 
 class AStarHandler {
@@ -54,16 +55,15 @@ class AStarHandler {
 		}
      */
 
-    // Clear and return the empty list if you're already at the target position
     fun getPathFromTo(start: Node, goal: Node, tiles: Array<Array<Node>>): List<Node> {
         path.clear()
+        // Clear and return the empty list if you're already at the target position
         if(start.position == goal.position) {
             return path
         }
         println("Starting board: ")
         displayDebug(tiles)
 
-        // TODO: Create test for PriorityQueue that uses NodeComparator
         // TODO: Create unit tests for every step of the algorithm, then things should work all together
         val openSet = PriorityQueue(NodeComparator())
         val closedSet = HashSet<Node>()
@@ -77,6 +77,9 @@ class AStarHandler {
 
         while(openSet.isNotEmpty()) {
             println("Iterations: ${++iters}")
+            if(iters > 2000) {
+                throw Exception("Infinite loop in progress... Aborting")
+            }
             var q = openSet.poll()
             closedSet.add(q)
 
@@ -114,7 +117,7 @@ class AStarHandler {
         return path
     }
 
-    private fun add(p1: Point, p2: Point): Point {
+    fun add(p1: Point, p2: Point): Point {
         return Point(p1.x + p2.x, p1.y + p2.y)
     }
 
@@ -159,7 +162,7 @@ class AStarHandler {
         return path
     }
 
-    private fun isValid(check: Point, input: Array<Array<Node>>): Boolean {
+    fun isValid(check: Point, input: Array<Array<Node>>): Boolean {
         return check.x >= 0 && check.x < input.size
                 && check.y >= 0 && check.y < input.size
                 && input[check.y][check.x].variation != Variation.X
@@ -212,12 +215,6 @@ class AStarHandler {
                 print("[${n.position.x},${n.position.y}]${n.variation.name} ")
             }
             println()
-        }
-    }
-
-    internal inner class NodeComparator : Comparator<Node> {
-        override fun compare(o1: Node, o2: Node): Int {
-            return if(o1.getF() - o2.getF() < 0) -1 else if(o1.getF() == o2.getF()) 0 else 1
         }
     }
 }

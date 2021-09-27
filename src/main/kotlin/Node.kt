@@ -11,7 +11,7 @@ class Node(var x: Int, var y: Int) {
     private var f = 0
 
     fun getF(): Int {
-        f = g + h
+        //f = g + h //method should not do more than its name describes
         return f
     }
 
