@@ -80,9 +80,11 @@ by following parent pointers
     fun getPathFromTo(start: Node, goal: Node, tiles: Array<Array<Node>>): List<Node> {
         path.clear()
         // Clear and return the empty list if you're already at the target position
-        if(start.position == goal.position) {
+        if (start.position == goal.position) {
             return path
         }
+        println("Starting position: ${start}")
+        println("Goal position: ${goal}")
         println("Starting board: ")
         displayDebug(tiles)
 
@@ -90,48 +92,58 @@ by following parent pointers
         val openSet = PriorityQueue(NodeComparator()) // OPEN = priority queue containing START
         val closedSet = HashSet<Node>() // CLOSED = empty set
 
-        for(n in checkSurrounding(start, tiles, closedSet)) {
-            println("Cost: ${gCostHandler.calculateG(start.variation, direction(start.position, n.position), n.variation)}")
-        }
-
         openSet.add(start)
         var iters = 0
 
-        while(openSet.isNotEmpty()) {
+        while (openSet.isNotEmpty()) {
             println("Iterations: ${++iters}")
-            if(iters > 2000) {
+            if (iters > 2000) {
                 throw Exception("Infinite loop in progress... Aborting")
             }
             var q = openSet.poll() // current = remove lowest rank item from OPEN
             closedSet.add(q) // add current to CLOSED
 
-            if(q.position == goal.position) {
+            displayDebug(tiles, q.position)
+
+            // TODO: add preliminary neighbour check for n == goal when current.h == 1?
+            if (q.position == goal.position) {
                 return retracePath(start, q)
-            }
-            // while lowest rank in OPEN is not the GOAL:
-            val surrounding = mutableListOf<Node>()
-            for(n in checkSurrounding(q, tiles, closedSet)) { // for neighbors of current:
-                val node = Node(n.x, n.y, q)
-                node.g = node.parent!!.g + gCostHandler.calculateG(q.variation, direction(q.position, node.position), node.variation)
+            } // while lowest rank in OPEN is not the GOAL:
+
+            val neighbors = mutableListOf<Node>()
+            for (n in checkSurrounding(q, tiles, closedSet)) { // TODO: nodes in closedSet are added back in??
+                val node = Node(n.x, n.y, n.variation, q)
+                node.g = node.parent!!.g + gCostHandler.calculateG(
+                    q.variation,
+                    direction(q.position, node.position),
+                    node.variation
+                )
                 node.h = gCostHandler.manhattenDistance(node, goal)
-                node.setF(node.g + node.h) // cost = g(current) + movementcost(current, neighbor)
-                surrounding.add(node)
+                node.setF(node.g + node.h)
+                neighbors.add(node)
             }
 
-            for(successor in surrounding) {
+            for (neighbor in neighbors) { // for neighbors of current:
 
-                for(node in openSet) {
-                    if(node.position == successor.position && node.getF() < successor.getF()) {
-                        continue
-                    }
+                val cost = q.g + gCostHandler.calculateG(
+                    q.variation,
+                    direction(q.position, neighbor.position),
+                    neighbor.variation
+                ) // cost = g(current) + movementcost(current, neighbor)
+
+                if (openSet.contains(neighbor) && cost < neighbor.g) {
+                    openSet.remove(neighbor)
                 }
 
-                for(node in closedSet) {
-                    if(node.position == successor.position && node.getF() < successor.getF()) {
-                        continue
-                    } else {
-                        openSet.add(node)
-                    }
+                if (closedSet.contains(neighbor) && cost < neighbor.g) {
+                    closedSet.remove(neighbor)
+                }
+
+                if (!openSet.contains(neighbor) && !closedSet.contains(neighbor)) {
+                    neighbor.g = cost
+                    neighbor.parent = q
+                    neighbor.setF(neighbor.g + neighbor.h)
+                    openSet.add(neighbor)
                 }
             }
         }
@@ -145,11 +157,11 @@ by following parent pointers
 
     private fun checkSurrounding(start: Node, tiles: Array<Array<Node>>, closedSet: Set<Node>): List<Node> {
         val validSurrounding = mutableListOf<Node>()
-        for(surrounding in surrounding) {
+        for (surrounding in surrounding) {
             val p = add(start.position, surrounding)
-            if(isValid(p, tiles)) {
+            if (isValid(p, tiles)) {
                 val node = tiles[p.y][p.x]
-                if(!closedSet.contains(node)) {
+                if (!closedSet.contains(node)) {
                     validSurrounding.add(node)
                 }
             }
@@ -159,10 +171,10 @@ by following parent pointers
 
     private fun checkSurroundingDebug(start: Node, tiles: Array<Array<Node>>): List<Node> {
         val validSurrounding = mutableListOf<Node>()
-        for(surrounding in surrounding) {
+        for (surrounding in surrounding) {
             var p = add(start.position, surrounding)
             println()
-            if(isValid(p, tiles)) {
+            if (isValid(p, tiles)) {
                 var node = tiles[p.y][p.x]
                 print("[${node.x},${node.y}]")
                 validSurrounding.add(node)
@@ -175,7 +187,7 @@ by following parent pointers
         val path = mutableListOf<Node>()
         var currentNode = end
 
-        while(currentNode != start) {
+        while (currentNode != start) {
             path.add(currentNode)
             currentNode = currentNode.parent!!
         }
@@ -192,7 +204,7 @@ by following parent pointers
 
     private fun direction(origin: Point, lookingAt: Point): Direction {
         // Top
-        if(origin.y > lookingAt.y) {
+        if (origin.y > lookingAt.y) {
             when {
                 origin.x > lookingAt.x -> {
                     return Direction.NORTHWEST
@@ -204,8 +216,8 @@ by following parent pointers
             return Direction.NORTHEAST
         }
         // Middle
-        if(origin.y == lookingAt.y) {
-            if(origin.x > lookingAt.x) {
+        if (origin.y == lookingAt.y) {
+            if (origin.x > lookingAt.x) {
                 return Direction.WEST
             }
             return Direction.EAST
@@ -223,8 +235,8 @@ by following parent pointers
     }
 
     fun display(tiles: Array<Array<Node>>) {
-        for(array in tiles) {
-            for(n in array) {
+        for (array in tiles) {
+            for (n in array) {
                 print("${n.variation.name} ")
             }
             println()
@@ -232,9 +244,22 @@ by following parent pointers
     }
 
     fun displayDebug(tiles: Array<Array<Node>>) {
-        for(array in tiles) {
-            for(n in array) {
+        for (array in tiles) {
+            for (n in array) {
                 print("[${n.position.x},${n.position.y}]${n.variation.name} ")
+            }
+            println()
+        }
+    }
+
+    fun displayDebug(tiles: Array<Array<Node>>, q: Point) {
+        for (array in tiles) {
+            for (n in array) {
+                if (n.position == q) {
+                    print("[${n.position.x},${n.position.y}]P ")
+                } else {
+                    print("[${n.position.x},${n.position.y}]${n.variation.name} ")
+                }
             }
             println()
         }

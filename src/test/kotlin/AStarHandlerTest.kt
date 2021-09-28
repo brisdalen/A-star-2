@@ -34,13 +34,19 @@ internal class AStarHandlerTest {
         Point(1, 1)
     )
 
-    lateinit var startNode: Node
-    lateinit var goalNode: Node
+    lateinit var startNode1: Node
+    lateinit var goalNode1: Node
+
+    lateinit var startNode2: Node
+    lateinit var goalNode2: Node
 
     @BeforeEach
     fun setUp() {
-        startNode = Node(0, 0)
-        goalNode = Node(4, 0)
+        startNode1 = Node(0, 0)
+        goalNode1 = Node(4, 0)
+
+        startNode2 = Node(0, 2)
+        goalNode2 = Node(4, 2)
     }
 
     @Test
@@ -48,7 +54,7 @@ internal class AStarHandlerTest {
         val expectedSize = 0
         val tiles = TerrainUtils.charInputToNodeMap(tilesInput)
 
-        assertEquals(expectedSize, handler.getPathFromTo(tiles[startNode.y][startNode.x], tiles[startNode.y][startNode.x], tiles).size)
+        assertEquals(expectedSize, handler.getPathFromTo(tiles[startNode1.y][startNode1.x], tiles[startNode1.y][startNode1.x], tiles).size)
     }
 
     @Test
@@ -86,10 +92,30 @@ internal class AStarHandlerTest {
     }
 
     @Test
-    fun getPathFromStartToEnd() {
-        val expectedSize = 4;
+    fun getPathFromStartToEndNoObstacles() {
+        val expectedSize = 4
         val tiles = TerrainUtils.charInputToNodeMap(tilesInput)
 
-        assertEquals(expectedSize, handler.getPathFromTo(tiles[startNode.y][startNode.x], tiles[goalNode.y][goalNode.x], tiles).size)
+        val actual = handler.getPathFromTo(tiles[startNode1.y][startNode1.x], tiles[goalNode1.y][goalNode1.x], tiles)
+        println()
+        for(n in actual) {
+            print("$n - ")
+        }
+
+        assertEquals(expectedSize, actual.size)
+    }
+
+    @Test
+    fun getPathFromStartToEndWithObstacles() {
+        val expectedSize = 5
+        val tiles = TerrainUtils.charInputToNodeMap(tilesInput)
+
+        val actual = handler.getPathFromTo(tiles[startNode2.y][startNode2.x], tiles[goalNode2.y][goalNode2.x], tiles)
+        println()
+        for(n in actual) {
+            print("$n - ")
+        }
+
+        assertEquals(expectedSize, actual.size)
     }
 }

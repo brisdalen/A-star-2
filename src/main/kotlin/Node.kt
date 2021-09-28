@@ -27,9 +27,19 @@ class Node(var x: Int, var y: Int) {
         this.parent = parent
     }
 
+    constructor(x: Int, y: Int, variation: Variation, parent: Node) : this(x, y) {
+        this.variation = variation
+        this.parent = parent
+    }
+
     override fun equals(other: Any?): Boolean {
         return if(other is Node) {
             other.position == position
+                    && other.variation == variation
         } else false
+    }
+
+    override fun toString(): String {
+        return "{${x}:${y}}"
     }
 }
