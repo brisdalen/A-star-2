@@ -8,7 +8,7 @@ class AStarHandler {
     val gCostHandler = CostHandler()
 
     // 3x3 area to check the surrounding area of a Node
-    val surrounding: Array<Point> = arrayOf(
+    val surroundingGrid: Array<Point> = arrayOf(
         Point(-1, -1), // Top
         Point(0, -1),
         Point(1, -1),
@@ -111,7 +111,7 @@ by following parent pointers
             } // while lowest rank in OPEN is not the GOAL:
 
             val neighbors = mutableListOf<Node>()
-            for (n in checkSurrounding(q, tiles, closedSet)) { // TODO: nodes in closedSet are added back in??
+            for (n in checkSurrounding(q, tiles, closedSet)) { // TODO: are nodes in closedSet added back in??
                 val node = Node(n.x, n.y, n.variation, q)
                 node.g = node.parent!!.g + gCostHandler.calculateG(
                     q.variation,
@@ -157,11 +157,13 @@ by following parent pointers
 
     private fun checkSurrounding(start: Node, tiles: Array<Array<Node>>, closedSet: Set<Node>): List<Node> {
         val validSurrounding = mutableListOf<Node>()
-        for (surrounding in surrounding) {
-            val p = add(start.position, surrounding)
-            if (isValid(p, tiles)) {
+        for (gridValue in surroundingGrid) {
+            val p = add(start.position, gridValue)
+            val isValid = isValid(p, tiles)
+            if (isValid) {
                 val node = tiles[p.y][p.x]
-                if (!closedSet.contains(node)) {
+                val closedSetContains = closedSet.contains(node)
+                if (!closedSetContains) {
                     validSurrounding.add(node)
                 }
             }
@@ -171,7 +173,7 @@ by following parent pointers
 
     private fun checkSurroundingDebug(start: Node, tiles: Array<Array<Node>>): List<Node> {
         val validSurrounding = mutableListOf<Node>()
-        for (surrounding in surrounding) {
+        for (surrounding in surroundingGrid) {
             var p = add(start.position, surrounding)
             println()
             if (isValid(p, tiles)) {
