@@ -36,6 +36,7 @@ class Node(var x: Int, var y: Int) {
         return if(other is Node) {
             other.position == position
                     && other.variation == variation
+                    && other.g == g
         } else false
     }
 

@@ -15,6 +15,26 @@ internal class AStarHandlerTest {
         arrayOf("O", "O", "O", "O", "O")
     )
 
+    var tilesInput2 = arrayOf(
+        arrayOf("O", "O", "O", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O")
+    )
+
+    val tilesComplex = arrayOf(
+        arrayOf("O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O")
+    )
+
     var tilesInvalid = arrayOf(
         arrayOf("X", "X", "X", "O", "O"),
         arrayOf("X", "O", "X", "O", "O"),
@@ -54,7 +74,10 @@ internal class AStarHandlerTest {
         val expectedSize = 0
         val tiles = TerrainUtils.charInputToNodeMap(tilesInput)
 
-        assertEquals(expectedSize, handler.getPathFromTo(tiles[startNode1.y][startNode1.x], tiles[startNode1.y][startNode1.x], tiles).size)
+        assertEquals(
+            expectedSize,
+            handler.getPathFromTo(tiles[startNode1.y][startNode1.x], tiles[startNode1.y][startNode1.x], tiles).size
+        )
     }
 
     @Test
@@ -77,7 +100,8 @@ internal class AStarHandlerTest {
 
     @Test
     fun isValidShouldReturnFalse_WhenInvalidOrBlockedTile() {
-        val tiles = TerrainUtils.charInputToNodeMap(tilesInvalid) // TODO: should have an array of Node ready so I dont depend on TerrainUtils
+        val tiles =
+            TerrainUtils.charInputToNodeMap(tilesInvalid) // TODO: should have an array of Node ready so I dont depend on TerrainUtils
         var centerPoint = Point(1, 1)
 
         for(s in surrounding) {
@@ -109,13 +133,32 @@ internal class AStarHandlerTest {
     fun getPathFromStartToEndWithObstacles() {
         val expectedSize = 5
         val tiles = TerrainUtils.charInputToNodeMap(tilesInput)
+        val tiles2 = TerrainUtils.charInputToNodeMap(tilesInput2)
 
         val actual = handler.getPathFromTo(tiles[startNode2.y][startNode2.x], tiles[goalNode2.y][goalNode2.x], tiles)
         println()
         for(n in actual) {
             print("$n - ")
         }
+        val actual2 =
+            handler.getPathFromTo(tiles2[startNode2.y][startNode2.x], tiles2[goalNode2.y][goalNode2.x], tiles2)
+        println()
+        for(n in actual2) {
+            print("$n - ")
+        }
 
         assertEquals(expectedSize, actual.size)
+        assertEquals(expectedSize, actual2.size)
+    }
+
+    @Test
+    fun getPathFromStartToEndWithComplexObstacles() {
+        // TODO: Implement
+        startNode1 = Node(0, 5)
+        goalNode1 = Node(11, 5)
+
+        val tiles = TerrainUtils.charInputToNodeMap(tilesComplex)
+
+        val actual = handler.getPathFromTo(tiles[startNode1.y][startNode1.x], tiles[goalNode1.y][goalNode1.x], tiles)
     }
 }

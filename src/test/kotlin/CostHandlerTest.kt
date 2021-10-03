@@ -23,33 +23,36 @@ internal class CostHandlerTest {
         val n1 = Node(0, 0)
         val n2 = Node(5, 5)
         val n3 = Node(-5, -5)
+        val n4 = Node(0, 0)
+        val n5 = Node(7, 3)
 
         val expected = 10
         assertEquals(expected, handler.manhattenDistance(n1, n2))
         assertEquals(expected, handler.manhattenDistance(n1, n3))
+        assertEquals(expected, handler.manhattenDistance(n4, n5))
     }
 
     @Test
     fun handleNorthWest() {
-        assertEquals(999, handler.handleNorthWest(open, south))
-        assertEquals(999, handler.handleNorthWest(open, east))
-        assertEquals(999, handler.handleNorthWest(open, rightSouth))
-        assertEquals(999, handler.handleNorthWest(open, downEast))
-        assertEquals(999, handler.handleNorthWest(north, open))
-        assertEquals(999, handler.handleNorthWest(west, open))
-        assertEquals(999, handler.handleNorthWest(leftNorth, open))
-        assertEquals(999, handler.handleNorthWest(upperWest, open))
+        assertEquals(999, handler.handleNorthWest(open, south, null, null))
+        assertEquals(999, handler.handleNorthWest(open, east, null, null))
+        assertEquals(999, handler.handleNorthWest(open, rightSouth, null, null))
+        assertEquals(999, handler.handleNorthWest(open, downEast, null, null))
+        assertEquals(999, handler.handleNorthWest(north, open, null, null))
+        assertEquals(999, handler.handleNorthWest(west, open, null, null))
+        assertEquals(999, handler.handleNorthWest(leftNorth, open, null, null))
+        assertEquals(999, handler.handleNorthWest(upperWest, open, null, null))
 
-        assertEquals(1, handler.handleNorthWest(open, open))
+        assertEquals(1, handler.handleNorthWest(open, open, null, null))
 
-        assertEquals(1, handler.handleNorthWest(open, north))
-        assertEquals(1, handler.handleNorthWest(open, west))
-        assertEquals(1, handler.handleNorthWest(open, leftNorth))
-        assertEquals(1, handler.handleNorthWest(open, upperWest))
-        assertEquals(1, handler.handleNorthWest(south, open))
-        assertEquals(1, handler.handleNorthWest(east, open))
-        assertEquals(1, handler.handleNorthWest(rightSouth, open))
-        assertEquals(1, handler.handleNorthWest(downEast, open))
+        assertEquals(1, handler.handleNorthWest(open, north, null, null))
+        assertEquals(1, handler.handleNorthWest(open, west, null, null))
+        assertEquals(1, handler.handleNorthWest(open, leftNorth, null, null))
+        assertEquals(1, handler.handleNorthWest(open, upperWest, null, null))
+        assertEquals(1, handler.handleNorthWest(south, open, null, null))
+        assertEquals(1, handler.handleNorthWest(east, open, null, null))
+        assertEquals(1, handler.handleNorthWest(rightSouth, open, null, null))
+        assertEquals(1, handler.handleNorthWest(downEast, open, null, null))
     }
 
     @Test
