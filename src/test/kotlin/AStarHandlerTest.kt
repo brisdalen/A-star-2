@@ -23,6 +23,14 @@ internal class AStarHandlerTest {
         arrayOf("O", "O", "E", "O", "O")
     )
 
+    val tilesInput3 = arrayOf(
+        arrayOf("O", "O", "O", "O", "O", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O", "O", "O"),
+        arrayOf("O", "O", "O", "O", "O", "O", "O")
+    )
+
     val tilesComplex = arrayOf(
         arrayOf("O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O"),
         arrayOf("O", "O", "E", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O"),
@@ -60,6 +68,9 @@ internal class AStarHandlerTest {
     lateinit var startNode2: Node
     lateinit var goalNode2: Node
 
+    lateinit var startNode3: Node
+    lateinit var goalNode3: Node
+
     @BeforeEach
     fun setUp() {
         startNode1 = Node(0, 0)
@@ -67,6 +78,9 @@ internal class AStarHandlerTest {
 
         startNode2 = Node(0, 2)
         goalNode2 = Node(4, 2)
+
+        startNode3 = Node(0, 2)
+        goalNode3 = Node(11, 2)
     }
 
     @Test
@@ -119,7 +133,30 @@ internal class AStarHandlerTest {
     fun getPathFromStartToEndNoObstacles() {
         val expectedSize = 4
         val tiles = TerrainUtils.charInputToNodeMap(tilesInput)
+        val tiles2 = TerrainUtils.charInputToNodeMap(tilesComplex)
 
+        val actual = handler.getPathFromTo(tiles[startNode1.y][startNode1.x], tiles[goalNode1.y][goalNode1.x], tiles)
+        println()
+        for(n in actual) {
+            print("$n - ")
+        }
+
+        goalNode1.x = 10
+        val actual2 = handler.getPathFromTo(tiles2[startNode1.y][startNode1.x], tiles2[goalNode1.y][goalNode1.x], tiles2)
+        println()
+        for(n in actual2) {
+            print("$n - ")
+        }
+
+        assertEquals(expectedSize, actual.size)
+    }
+
+    @Test
+    fun getPathFromStartToEndNoObstaclesLongMap() {
+        val expectedSize = 10
+        val tiles = TerrainUtils.charInputToNodeMap(tilesComplex)
+
+        goalNode1.x = 10
         val actual = handler.getPathFromTo(tiles[startNode1.y][startNode1.x], tiles[goalNode1.y][goalNode1.x], tiles)
         println()
         for(n in actual) {
@@ -149,6 +186,19 @@ internal class AStarHandlerTest {
 
         assertEquals(expectedSize, actual.size)
         assertEquals(expectedSize, actual2.size)
+    }
+
+    @Test
+    fun getPathFromStartToEndWithObstacles2() {
+        val startNode = Node(0, 0)
+        val endNode = Node(6, 4) // TODO: Fails on x > 4 ???
+        val tiles = TerrainUtils.charInputToNodeMap(tilesInput3)
+
+        val actual = handler.getPathFromTo(tiles[startNode.y][startNode.x], tiles[endNode.y][endNode.x], tiles)
+        println()
+        for(n in actual) {
+            print("$n - ")
+        }
     }
 
     @Test

@@ -20,42 +20,6 @@ class AStarHandler {
     )
 
     /*
-    while (openSet.Count > 0) {
-			Node node = openSet[0];
-			for (int i = 1; i < openSet.Count; i ++) {
-				if (openSet[i].fCost < node.fCost || openSet[i].fCost == node.fCost) {
-					if (openSet[i].hCost < node.hCost)
-						node = openSet[i];
-				}
-			}
-
-			openSet.Remove(node); X
-			closedSet.Add(node); X
-
-			if (node == targetNode) { X
-				RetracePath(startNode,targetNode);
-				return;
-			}
-
-			foreach (Node neighbour in grid.GetNeighbours(node)) {
-				if (!neighbour.walkable || closedSet.Contains(neighbour)) {
-					continue;
-				}
-
-				int newCostToNeighbour = node.gCost + GetDistance(node, neighbour);
-				if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour)) {
-					neighbour.gCost = newCostToNeighbour;
-					neighbour.hCost = GetDistance(neighbour, targetNode);
-					neighbour.parent = node;
-
-					if (!openSet.Contains(neighbour))
-						openSet.Add(neighbour);
-				}
-			}
-		}
-     */
-
-    /*
     OPEN = priority queue containing START
 CLOSED = empty set
 while lowest rank in OPEN is not the GOAL:
@@ -83,8 +47,8 @@ by following parent pointers
         if(start.position == goal.position) {
             return path
         }
-        println("Starting position: ${start}")
-        println("Goal position: ${goal}")
+        println("Starting position: $start")
+        println("Goal position: $goal")
         println("Starting board: ")
         displayDebug(tiles)
 
@@ -97,13 +61,13 @@ by following parent pointers
 
         while(openSet.isNotEmpty()) {
             println("Iterations: ${++iters}")
-            if(iters > 200000) {
+            if(iters > 2000) {
                 throw Exception("Infinite loop in progress... Aborting")
             }
             var q = openSet.poll() // current = remove lowest rank item from OPEN
             closedSet.add(q) // add current to CLOSED
 
-            displayDebug(tiles, q.position)
+            displayDebug(tiles, q.position, goal.position)
 
             // TODO: add preliminary neighbour check for n == goal when current.h == 1?
             if(q.position == goal.position) {
@@ -166,6 +130,9 @@ by following parent pointers
                         Direction.SOUTHEAST -> {
                             cardinalVariation1 = surrounding[4]?.variation // east
                             cardinalVariation2 = surrounding[6]?.variation // south
+                        }
+                        else -> {
+                            val otherwise = "Otherwise"
                         }
                     }
 
@@ -304,13 +271,19 @@ by following parent pointers
         }
     }
 
-    fun displayDebug(tiles: Array<Array<Node>>, q: Point) {
+    fun displayDebug(tiles: Array<Array<Node>>, q: Point, goal: Point) {
         for(array in tiles) {
             for(n in array) {
-                if(n.position == q) {
-                    print("[${n.position.x},${n.position.y}]P ")
-                } else {
-                    print("[${n.position.x},${n.position.y}]${n.variation.name} ")
+                when (n.position) {
+                    goal -> {
+                        print("[${n.position.x},${n.position.y}]G ")
+                    }
+                    q -> {
+                        print("[${n.position.x},${n.position.y}]P ")
+                    }
+                    else -> {
+                        print("[${n.position.x},${n.position.y}]${n.variation.name} ")
+                    }
                 }
             }
             println()
