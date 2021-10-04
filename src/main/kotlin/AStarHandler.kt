@@ -76,7 +76,7 @@ by following parent pointers
 
             val neighbors = arrayOfNulls<Node>(8)
             val surrounding = checkSurrounding(q, tiles, closedSet)
-            for((i, n) in surrounding.withIndex()) {
+            for((i, n) in surrounding.withIndex()) { // TODO: During longmap no obstacles test, {9, 0} isnt detected for some reason??
                 if(n != null) {
                     val node = Node(n.x, n.y, n.variation, q)
                     val direction = direction(q.position, node.position)
