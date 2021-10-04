@@ -17,7 +17,7 @@ class CostHandler {
         val dx = abs(start.x - goal.x)
         val dy = abs(start.y - goal.y)
 
-        return 1 * (dx + dy) + (1 - 2 * 1) * min(dx, dy)
+        return 10 * (dx + dy) + (14 - 2 * 1) * min(dx, dy)
     }
 
     // TODO: Think I need to check the 2 additional cardinal directions on diagonal movement, I.e. check variation of north and east tile when checking g cost on a north-east movement (I.e. moving from {2,2} to {3,3})
@@ -52,14 +52,14 @@ class CostHandler {
         if(checkContainsNW(originVariation.name, goalVariation.name)) {
             return 999
         }
-        return 1
+        return 14
     }
 
     fun handleNorth(originVariation: Variation, goalVariation: Variation): Int {
         if(checkContainsN(originVariation.name, goalVariation.name)) {
             return 999
         }
-        return 1
+        return 10
     }
 
     fun handleNorthEast(originVariation: Variation, goalVariation: Variation, cardinalVariation1: Variation?, cardinalVariation2: Variation?): Int {
@@ -69,21 +69,21 @@ class CostHandler {
         if(checkContainsNE(originVariation.name, goalVariation.name, cardinalVariation1.name, cardinalVariation2.name)) {
             return 999
         }
-        return 1
+        return 14
     }
 
     fun handleWest(originVariation: Variation, goalVariation: Variation): Int {
         if(checkContainsW(originVariation.name, goalVariation.name)) {
             return 999
         }
-        return 1
+        return 10
     }
 
     fun handleEast(originVariation: Variation, goalVariation: Variation): Int {
         if(checkContainsE(originVariation.name, goalVariation.name)) {
             return 999
         }
-        return 1
+        return 10
     }
 
     fun handleSouthWest(originVariation: Variation, goalVariation: Variation, cardinalVariation1: Variation?, cardinalVariation2: Variation?): Int {
@@ -93,14 +93,14 @@ class CostHandler {
         if(checkContainsSW(originVariation.name, goalVariation.name)) { // TODO: add to checkContains
             return 999
         }
-        return 1
+        return 14
     }
 
     fun handleSouth(originVariation: Variation, goalVariation: Variation): Int {
         if(checkContainsS(originVariation.name, goalVariation.name)) {
             return 999
         }
-        return 1
+        return 10
     }
 
     fun handleSouthEast(originVariation: Variation, goalVariation: Variation, cardinalVariation1: Variation?, cardinalVariation2: Variation?): Int {
@@ -110,7 +110,7 @@ class CostHandler {
         if(checkContainsSE(originVariation.name, goalVariation.name, cardinalVariation1.name, cardinalVariation2.name)) { // east, south
             return 999
         }
-        return 1
+        return 14
     }
 
     // i.e. goal = (0,0) and origin = (1,1), then this returns true
