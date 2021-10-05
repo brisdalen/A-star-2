@@ -14,5 +14,9 @@ enum class Variation {
     uw,
     dw,
     ue,
-    de
+    de,
+    NW,
+    NE,
+    SW,
+    SE
 }

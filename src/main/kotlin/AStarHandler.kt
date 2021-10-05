@@ -61,7 +61,7 @@ by following parent pointers
 
         while(openSet.isNotEmpty()) {
             println("Iterations: ${++iters}")
-            if(iters > 2000) {
+            if(iters > 20000) {
                 throw Exception("Infinite loop in progress... Aborting")
             }
             var q = openSet.poll() // current = remove lowest rank item from OPEN
