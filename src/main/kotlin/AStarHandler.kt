@@ -67,7 +67,7 @@ by following parent pointers
             var q = openSet.poll() // current = remove lowest rank item from OPEN
             closedSet.add(q) // add current to CLOSED
 
-            displayDebug(tiles, q.position, goal.position)
+            displayDebug(tiles, q.position, goal.position) // Removing this and the iteration print improves by 40%
 
             // TODO: add preliminary neighbour check for n == goal when current.h == 1?
             if(q.position == goal.position) {

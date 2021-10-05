@@ -44,15 +44,15 @@ internal class AStarHandlerTest {
     )
 
     val tilesComplex1 = arrayOf(
-        arrayOf("O", "O", "E", "O", "O", "O", "E", "O", "O", "O", "O", "O", "O"),
-        arrayOf("O", "O", "E", "O", "O", "O", "E", "O", "O", "E", "O", "O", "O"),
-        arrayOf("O", "O", "E", "O", "O", "O", "E", "O", "O", "E", "O", "O", "O"),
-        arrayOf("O", "O", "E", "O", "O", "O", "E", "O", "O", "E", "O", "O", "O"),
-        arrayOf("O", "O", "E", "S", "S", "O", "E", "S", "S", "S", "O", "W", "O"), // TODO: handle SW variation in its own, small test
+        arrayOf("O", "O", "W", "O", "O", "O", "E", "O", "O", "O", "O", "O", "O"),
+        arrayOf("O", "O", "W", "O", "O", "O", "E", "O", "NW", "NE", "O", "O", "O"),
+        arrayOf("O", "O", "W", "O", "O", "O", "E", "O", "O", "E", "O", "O", "O"),
+        arrayOf("O", "O", "W", "O", "O", "O", "E", "O", "O", "E", "O", "O", "O"),
+        arrayOf("O", "O", "SW", "S", "S", "O", "E", "S", "S", "SE", "O", "W", "O"), // TODO: handle SW variation in its own, small test
         arrayOf("O", "O", "O", "O", "W", "O", "O", "O", "O", "O", "O", "W", "O"),
         arrayOf("O", "O", "O", "O", "W", "O", "O", "O", "O", "O", "O", "W", "O"),
-        arrayOf("O", "O", "O", "O", "W", "O", "W", "N", "N", "N", "N", "N", "N"),
-        arrayOf("O", "O", "E", "O", "O", "O", "W", "O", "O", "O", "O", "O", "O")
+        arrayOf("O", "O", "O", "O", "SW", "O", "NW", "N", "N", "N", "N", "N", "N"),
+        arrayOf("O", "O", "NE", "O", "O", "O", "W", "O", "O", "O", "O", "O", "O")
     )
 
     val tilesComplex2 = arrayOf(
@@ -75,6 +75,16 @@ internal class AStarHandlerTest {
         arrayOf("O", "O", "W", "O", "O"),
         arrayOf("O", "O", "W", "O", "O"),
         arrayOf("O", "O", "W", "O", "O"),
+    )
+
+    val tilesCombo1 = arrayOf(
+        arrayOf("O", "W", "X", "E", "O"),
+        arrayOf("O", "W", "X", "E", "O"),
+        arrayOf("O", "W", "X", "E", "O"),
+        arrayOf("O", "SW", "S", "SE", "O"),
+        arrayOf("O", "O", "O", "O", "O"),
+        arrayOf("O", "O", "O", "O", "O"),
+        arrayOf("O", "O", "O", "O", "O"),
     )
 
     var tilesInvalid = arrayOf(
@@ -201,6 +211,19 @@ internal class AStarHandlerTest {
         }
 
         assertEquals(expectedSize, actual.size)
+    }
+
+    @Test
+    fun getPathFromStartToEndComboWalls1() {
+        val tiles = TerrainUtils.charInputToNodeMap(tilesCombo1)
+        goalNode1.x = 4
+        goalNode1.y = 0
+
+        val actual = handler.getPathFromTo(tiles[startNode1.y][startNode1.x], tiles[goalNode1.y][goalNode1.x], tiles)
+        println()
+        for(n in actual) {
+            print("$n - ")
+        }
     }
 
     @Test
