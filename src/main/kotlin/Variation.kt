@@ -7,7 +7,7 @@ enum class Variation {
     S,
     W,
     E,
-    ln,
+    ln, // Halves
     rn,
     ls,
     rs,
@@ -15,8 +15,10 @@ enum class Variation {
     dw,
     ue,
     de,
-    NW,
+    NW, // Combo full
     NE,
     SW,
-    SE
+    SE,
+    NS,
+    WE
 }

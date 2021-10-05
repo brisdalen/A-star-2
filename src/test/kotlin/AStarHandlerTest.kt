@@ -48,11 +48,11 @@ internal class AStarHandlerTest {
         arrayOf("O", "O", "W", "O", "O", "O", "E", "O", "NW", "NE", "O", "O", "O"),
         arrayOf("O", "O", "W", "O", "O", "O", "E", "O", "O", "E", "O", "O", "O"),
         arrayOf("O", "O", "W", "O", "O", "O", "E", "O", "O", "E", "O", "O", "O"),
-        arrayOf("O", "O", "SW", "S", "S", "O", "E", "S", "S", "SE", "O", "W", "O"), // TODO: handle SW variation in its own, small test
+        arrayOf("O", "O", "SW", "S", "S", "O", "E", "S", "S", "SE", "O", "W", "O"),
         arrayOf("O", "O", "O", "O", "W", "O", "O", "O", "O", "O", "O", "W", "O"),
         arrayOf("O", "O", "O", "O", "W", "O", "O", "O", "O", "O", "O", "W", "O"),
         arrayOf("O", "O", "O", "O", "SW", "O", "NW", "N", "N", "N", "N", "N", "N"),
-        arrayOf("O", "O", "NE", "O", "O", "O", "W", "O", "O", "O", "O", "O", "O")
+        arrayOf("O", "O", "NE", "O", "NS", "O", "W", "O", "O", "O", "O", "O", "O")
     )
 
     val tilesComplex2 = arrayOf(
@@ -75,6 +75,16 @@ internal class AStarHandlerTest {
         arrayOf("O", "O", "W", "O", "O"),
         arrayOf("O", "O", "W", "O", "O"),
         arrayOf("O", "O", "W", "O", "O"),
+    )
+
+    val tilesDiagonal = arrayOf(
+        arrayOf("O", "rn", "O", "O", "O"),
+        arrayOf("ls", "O", "rn", "O", "O"),
+        arrayOf("O", "ls", "O", "rn", "O"),
+        arrayOf("O", "O", "ls", "O", "rn"),
+        arrayOf("O", "O", "O", "ls", "O"),
+        arrayOf("O", "O", "O", "O", "ls"),
+        arrayOf("O", "O", "O", "O", "O"),
     )
 
     val tilesCombo1 = arrayOf(
@@ -218,6 +228,19 @@ internal class AStarHandlerTest {
         val tiles = TerrainUtils.charInputToNodeMap(tilesCombo1)
         goalNode1.x = 4
         goalNode1.y = 0
+
+        val actual = handler.getPathFromTo(tiles[startNode1.y][startNode1.x], tiles[goalNode1.y][goalNode1.x], tiles)
+        println()
+        for(n in actual) {
+            print("$n - ")
+        }
+    }
+
+    @Test
+    fun getPathFromStartToEndDiagonalHalfWalls() {
+        val tiles = TerrainUtils.charInputToNodeMap(tilesDiagonal)
+        goalNode1.x = 4
+        goalNode1.y = 4
 
         val actual = handler.getPathFromTo(tiles[startNode1.y][startNode1.x], tiles[goalNode1.y][goalNode1.x], tiles)
         println()
