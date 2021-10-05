@@ -76,11 +76,20 @@ by following parent pointers
 
             val neighbors = arrayOfNulls<Node>(8)
             val surrounding = checkSurrounding(q, tiles, closedSet)
-            for((i, n) in surrounding.withIndex()) { // TODO: During longmap no obstacles test, {9, 0} isnt detected for some reason??
+            for((i, n) in surrounding.withIndex()) {
                 if(n != null) {
                     val node = Node(n.x, n.y, n.variation, q)
                     val direction = direction(q.position, node.position)
                     when(direction) {
+                        Direction.NORTHWEST -> {
+                            node.g = node.parent!!.g + gCostHandler.calculateG(
+                                q.variation,
+                                direction,
+                                node.variation,
+                                surrounding[1]?.variation, // north
+                                surrounding[3]?.variation // west
+                            )
+                        }
                         Direction.NORTHEAST -> {
                             node.g = node.parent!!.g + gCostHandler.calculateG(
                                 q.variation,
@@ -88,6 +97,15 @@ by following parent pointers
                                 node.variation,
                                 surrounding[1]?.variation, // north
                                 surrounding[4]?.variation // east
+                            )
+                        }
+                        Direction.SOUTHWEST -> {
+                            node.g = node.parent!!.g + gCostHandler.calculateG(
+                                q.variation,
+                                direction,
+                                node.variation,
+                                surrounding[3]?.variation, // west
+                                surrounding[6]?.variation // south
                             )
                         }
                         Direction.SOUTHEAST -> {
@@ -109,7 +127,6 @@ by following parent pointers
                             )
                         }
                     }
-                    //node.h = gCostHandler.manhattenDistance(node, goal)
                     node.h = gCostHandler.diagonalDistance(node, goal)
                     node.setF(node.g + node.h)
                     neighbors[i] = node
@@ -216,7 +233,7 @@ by following parent pointers
     }
 
     fun isValid(check: Point, input: Array<Array<Node>>): Boolean {
-        return check.x >= 0 && check.x < input.size
+        return check.x >= 0 && check.x < input[0].size // assuming the map is rectangular, and with at least one row TODO: throw exception at the start of algorithm if not?
                 && check.y >= 0 && check.y < input.size
                 && input[check.y][check.x].variation != Variation.X
     }

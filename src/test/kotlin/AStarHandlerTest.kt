@@ -31,7 +31,7 @@ internal class AStarHandlerTest {
         arrayOf("O", "O", "O", "O", "O", "O", "O")
     )
 
-    val tilesComplex = arrayOf(
+    val tilesLong = arrayOf(
         arrayOf("O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O"),
         arrayOf("O", "O", "E", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O"),
         arrayOf("O", "O", "E", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O"),
@@ -41,6 +41,30 @@ internal class AStarHandlerTest {
         arrayOf("O", "O", "E", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O"),
         arrayOf("O", "O", "E", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O"),
         arrayOf("O", "O", "E", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O")
+    )
+
+    val tilesComplex1 = arrayOf(
+        arrayOf("O", "O", "E", "O", "O", "O", "W", "O", "O", "O", "O", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O", "O", "W", "O", "O", "E", "O", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O", "O", "W", "O", "O", "E", "O", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O", "O", "W", "O", "O", "E", "O", "O", "O"),
+        arrayOf("O", "O", "E", "S", "S", "O", "S", "S", "S", "S", "O", "W", "O"),
+        arrayOf("O", "O", "O", "O", "W", "O", "O", "O", "O", "O", "O", "W", "O"),
+        arrayOf("O", "O", "O", "O", "W", "O", "O", "O", "O", "O", "O", "W", "O"),
+        arrayOf("O", "O", "O", "O", "W", "O", "W", "N", "N", "N", "N", "N", "N"),
+        arrayOf("O", "O", "E", "O", "O", "O", "W", "O", "O", "O", "O", "O", "O")
+    )
+
+    val tilesComplex2 = arrayOf(
+        arrayOf("O", "O", "E", "O", "O", "O", "W", "O", "O", "O", "O", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O", "O", "W", "O", "O", "E", "O", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O", "O", "W", "O", "O", "E", "O", "O", "O"),
+        arrayOf("O", "O", "E", "O", "O", "O", "W", "O", "O", "E", "O", "O", "O"),
+        arrayOf("O", "O", "E", "S", "S", "O", "W", "S", "S", "S", "O", "W", "O"),
+        arrayOf("O", "O", "O", "O", "W", "O", "N", "O", "O", "O", "O", "W", "O"), // TODO: Fails on passing through the NS "passage" here
+        arrayOf("O", "O", "O", "O", "W", "O", "S", "O", "O", "O", "O", "W", "O"),
+        arrayOf("O", "O", "O", "O", "W", "O", "W", "N", "N", "N", "N", "N", "N"),
+        arrayOf("O", "O", "E", "O", "O", "O", "W", "O", "O", "O", "O", "O", "O")
     )
 
     var tilesInvalid = arrayOf(
@@ -133,7 +157,7 @@ internal class AStarHandlerTest {
     fun getPathFromStartToEndNoObstacles() {
         val expectedSize = 4
         val tiles = TerrainUtils.charInputToNodeMap(tilesInput)
-        val tiles2 = TerrainUtils.charInputToNodeMap(tilesComplex)
+        val tiles2 = TerrainUtils.charInputToNodeMap(tilesLong)
 
         val actual = handler.getPathFromTo(tiles[startNode1.y][startNode1.x], tiles[goalNode1.y][goalNode1.x], tiles)
         println()
@@ -154,7 +178,7 @@ internal class AStarHandlerTest {
     @Test
     fun getPathFromStartToEndNoObstaclesLongMap() {
         val expectedSize = 10
-        val tiles = TerrainUtils.charInputToNodeMap(tilesComplex)
+        val tiles = TerrainUtils.charInputToNodeMap(tilesLong)
 
         goalNode1.x = 10
         val actual = handler.getPathFromTo(tiles[startNode1.y][startNode1.x], tiles[goalNode1.y][goalNode1.x], tiles)
@@ -204,11 +228,15 @@ internal class AStarHandlerTest {
     @Test
     fun getPathFromStartToEndWithComplexObstacles() {
         // TODO: Implement
-        startNode1 = Node(0, 5)
-        goalNode1 = Node(11, 5)
+        startNode1 = Node(0, 0)
+        goalNode1 = Node(7, 2)
 
-        val tiles = TerrainUtils.charInputToNodeMap(tilesComplex)
+        val tiles = TerrainUtils.charInputToNodeMap(tilesComplex1)
 
         val actual = handler.getPathFromTo(tiles[startNode1.y][startNode1.x], tiles[goalNode1.y][goalNode1.x], tiles)
+        println()
+        for(n in actual) {
+            print("$n - ")
+        }
     }
 }

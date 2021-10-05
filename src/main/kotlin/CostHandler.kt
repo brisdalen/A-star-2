@@ -16,15 +16,16 @@ class CostHandler {
     fun diagonalDistance(start: Node, goal: Node): Int {
         val dx = abs(start.x - goal.x)
         val dy = abs(start.y - goal.y)
+        val D = 10
+        val D2 = 14
 
-        return 10 * (dx + dy) + (14 - 2 * 1) * min(dx, dy)
+        return D * (dx + dy) + (D2 - 2 * D) * min(dx, dy)
     }
 
-    // TODO: Think I need to check the 2 additional cardinal directions on diagonal movement, I.e. check variation of north and east tile when checking g cost on a north-east movement (I.e. moving from {2,2} to {3,3})
     fun calculateG(originVariation: Variation, direction: Direction, goalVariation: Variation, cardinalVariation1: Variation?, cardinalVariation2: Variation?): Int {
         return when(direction) {
             Direction.NORTHWEST -> {
-                handleNorthWest(originVariation, goalVariation, cardinalVariation1, cardinalVariation2) // TODO: cardinals
+                handleNorthWest(originVariation, goalVariation, cardinalVariation1, cardinalVariation2)
             }
             Direction.NORTH -> {
                 handleNorth(originVariation, goalVariation)
@@ -39,7 +40,7 @@ class CostHandler {
                 handleEast(originVariation, goalVariation)
             }
             Direction.SOUTHWEST -> {
-                handleSouthWest(originVariation, goalVariation,  cardinalVariation1, cardinalVariation2) // TODO: cardinals
+                handleSouthWest(originVariation, goalVariation,  cardinalVariation1, cardinalVariation2)
             }
             Direction.SOUTH -> {
                 handleSouth(originVariation, goalVariation)
@@ -49,7 +50,10 @@ class CostHandler {
     }
 
     fun handleNorthWest(originVariation: Variation, goalVariation: Variation, cardinalVariation1: Variation?, cardinalVariation2: Variation?): Int {
-        if(checkContainsNW(originVariation.name, goalVariation.name)) {
+        if(cardinalVariation1 == null || cardinalVariation2 == null) {
+            return 999
+        }
+        if(checkContainsNW(originVariation.name, goalVariation.name, cardinalVariation1.name, cardinalVariation2.name)) {
             return 999
         }
         return 14
@@ -87,10 +91,10 @@ class CostHandler {
     }
 
     fun handleSouthWest(originVariation: Variation, goalVariation: Variation, cardinalVariation1: Variation?, cardinalVariation2: Variation?): Int {
-//        if(cardinalVariation1 == null || cardinalVariation2 == null) { // TODO: add cardinals
-//            return 999
-//        }
-        if(checkContainsSW(originVariation.name, goalVariation.name)) { // TODO: add to checkContains
+        if(cardinalVariation1 == null || cardinalVariation2 == null) {
+            return 999
+        }
+        if(checkContainsSW(originVariation.name, goalVariation.name, cardinalVariation1.name, cardinalVariation2.name)) {
             return 999
         }
         return 14
@@ -114,7 +118,7 @@ class CostHandler {
     }
 
     // i.e. goal = (0,0) and origin = (1,1), then this returns true
-    private fun checkContainsNW(origin: String, goal: String): Boolean {
+    private fun checkContainsNW(origin: String, goal: String, cardinalNorth: String, cardinalWest: String): Boolean {
         return goal.contains(Variation.S.name)
                 || goal.contains(Variation.E.name)
                 || goal.contains(Variation.rs.name)
@@ -123,6 +127,14 @@ class CostHandler {
                 || origin.contains(Variation.W.name)
                 || origin.contains(Variation.ln.name)
                 || origin.contains(Variation.uw.name)
+                || cardinalNorth.contains(Variation.S.name)
+                || cardinalNorth.contains(Variation.ls.name)
+                || cardinalNorth.contains(Variation.W.name)
+                || cardinalNorth.contains(Variation.dw.name)
+                || cardinalWest.contains(Variation.E.name)
+                || cardinalWest.contains(Variation.ue.name)
+                || cardinalWest.contains(Variation.N.name)
+                || cardinalWest.contains(Variation.rn.name)
     }
 
     private fun checkContainsN(origin: String, goal: String): Boolean {
@@ -171,7 +183,7 @@ class CostHandler {
                 || origin.contains(Variation.de.name)
     }
 
-    private fun checkContainsSW(origin: String, goal: String): Boolean {
+    private fun checkContainsSW(origin: String, goal: String, cardinalWest: String, cardinalSouth: String): Boolean {
         return goal.contains(Variation.N.name)
                 || goal.contains(Variation.E.name)
                 || goal.contains(Variation.rn.name)
@@ -180,6 +192,14 @@ class CostHandler {
                 || origin.contains(Variation.W.name)
                 || origin.contains(Variation.ls.name)
                 || origin.contains(Variation.dw.name)
+                || cardinalWest.contains(Variation.E.name)
+                || cardinalWest.contains(Variation.de.name)
+                || cardinalWest.contains(Variation.S.name)
+                || cardinalWest.contains(Variation.rs.name)
+                || cardinalSouth.contains(Variation.N.name)
+                || cardinalSouth.contains(Variation.ln.name)
+                || cardinalSouth.contains(Variation.W.name)
+                || cardinalSouth.contains(Variation.uw.name)
     }
 
     private fun checkContainsS(origin: String, goal: String): Boolean {
