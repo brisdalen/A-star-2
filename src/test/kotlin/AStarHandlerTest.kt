@@ -97,6 +97,16 @@ internal class AStarHandlerTest {
         arrayOf("O", "O", "O", "O", "O"),
     )
 
+    val tilesCombo2 = arrayOf(
+        arrayOf("O", "O", "X", "X", "O"),
+        arrayOf("O", "rndw", "Nuw", "Nls", "rsde"),
+        arrayOf("O", "W", "Sdw", "S", "E"),
+        arrayOf("O", "W", "O", "O", "O"),
+        arrayOf("O", "O", "O", "O", "O"),
+        arrayOf("O", "O", "O", "O", "O"),
+        arrayOf("O", "O", "O", "O", "O"),
+    )
+
     var tilesInvalid = arrayOf(
         arrayOf("X", "X", "X", "O", "O"),
         arrayOf("X", "O", "X", "O", "O"),
@@ -241,6 +251,17 @@ internal class AStarHandlerTest {
         val tiles = TerrainUtils.charInputToNodeMap(tilesDiagonal)
         goalNode1.x = 4
         goalNode1.y = 4
+
+        val actual = handler.getPathFromTo(tiles[startNode1.y][startNode1.x], tiles[goalNode1.y][goalNode1.x], tiles)
+        println()
+        for(n in actual) {
+            print("$n - ")
+        }
+    }
+
+    @Test
+    fun getPathFromStartToEndComplexComboWalls() {
+        val tiles = TerrainUtils.charInputToNodeMap(tilesCombo2)
 
         val actual = handler.getPathFromTo(tiles[startNode1.y][startNode1.x], tiles[goalNode1.y][goalNode1.x], tiles)
         println()
